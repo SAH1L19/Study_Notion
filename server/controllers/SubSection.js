@@ -1,6 +1,6 @@
 const SubSection = require("../models/SubSection");
 const Section = require("../models/Section");
-const {uploadToCloudinary} = require("../utils/imageUploader");
+const {uploadImageToCloudinary} = require("../utils/imageUploader");
 
 exports.createSubSection = async(req,res)=>{
     try{
@@ -15,13 +15,14 @@ exports.createSubSection = async(req,res)=>{
             });
         }
         
-        const uploadDetails = await uploadToCloudinary(video,process.env.FOLDER_NAME);
+        const uploadDetails = await uploadImageToCloudinary(video,process.env.FOLDER_NAME);
         const SubSectionDetails = await SubSection.create({
             title:title,
             timeDuration:timeDuration,
             description:description,
             videoUrl:uploadDetails.secure_url,
         })
+        console.log(video);
         
         const updatedSection = await Section.findByIdAndUpdate({_id:sectionId},
             {
@@ -33,6 +34,7 @@ exports.createSubSection = async(req,res)=>{
             return res.status(200).json({
                 success:true,
                 message:"Sub Section created successfully",
+                data:updatedSection
             });
     }
     catch(error){

@@ -51,6 +51,7 @@ exports.deleteProfile = async(req,res)=>{
             return res.status(404).json({
                 success: false,
                 message: "User not found",
+                userDetails,
             });
         }
         const ProfileId = new mongoose.Types.ObjectId(userDetails.additionalDetails);

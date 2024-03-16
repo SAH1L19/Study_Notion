@@ -225,24 +225,33 @@ exports.getCourseDetails = async (req, res) => {
       });
     }
 
-    let totalDurationInSeconds = 0
-    courseDetails.courseContent.forEach((content) => {
-      content.subSection.forEach((subSection) => {
-        const timeDurationInSeconds = parseInt(subSection.timeDuration)
-        totalDurationInSeconds += timeDurationInSeconds
-      })
-    });
-
-    const totalDuration = convertSecondsToDuration(totalDurationInSeconds)
-    // return response
-    return res.status(200).json({
-      success: true,
-      message: "All courseDetails are fetched successfully",
-      data: {courseDetails,totalDuration},
-    });
+    if (courseDetails && courseDetails.courseContent) {
+      let totalDurationInSeconds = 0;
+      courseDetails.courseContent.forEach((content) => {
+        content.subSection.forEach((subSection) => {
+          const timeDurationInSeconds = parseInt(subSection.timeDuration);
+          totalDurationInSeconds += timeDurationInSeconds;
+        });
+      });
+    
+      const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
+      // return response
+      return res.status(200).json({
+        success: true,
+        message: "All courseDetails are fetched successfully",
+        data: { courseDetails, totalDuration },
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: "Course details not found or invalid format",
+        data: null,
+      });
+    }
   } catch (err) {
     console.log(err);
     return res.status(500).json({
+      
       success: false,
       message: err.message,
     });

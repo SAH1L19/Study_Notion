@@ -17,10 +17,10 @@ const courseSchema = new mongoose.Schema({
   whatYouWillLearn:{
     type:String,
   },
-  courseContent:{
+  courseContent:[{
     type:mongoose.Schema.ObjectId,
     ref:"Section",
-  },
+  }],
   ratingAndReviews:[{
     type:mongoose.Schema.ObjectId,
     ref:"RatingAndReview",
