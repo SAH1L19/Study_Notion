@@ -44,7 +44,7 @@ exports.showAllCategories = async(req,res)=>{
     }
   }
   
-  exports.categoryDetails = async(req,res)=>{
+  exports.categoryPageDetails = async(req,res)=>{
     try{
         //course id 
         const {categoryId}  =req.body;

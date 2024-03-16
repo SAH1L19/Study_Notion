@@ -2,7 +2,7 @@ const SubSection = require("../models/SubSection");
 const Section = require("../models/Section");
 const {uploadToCloudinary} = require("../utils/imageUploader");
 
-exports.SubSection = async(req,res)=>{
+exports.createSubSection = async(req,res)=>{
     try{
         const {sectionId,title,timeDuration,description} = req.body;
 

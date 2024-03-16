@@ -88,7 +88,7 @@ exports.capturePayment = async(req,res)=>{
 
 //verify signature of razorpay and server
 
-exports.verifySignature = async(req,res)=>{
+exports.verifyPayment = async(req,res)=>{
     const webhookSecret = "12345";
 
     const signature = req.headers("x-razorpay-signature");
@@ -169,3 +169,36 @@ exports.verifySignature = async(req,res)=>{
 
     
 }
+
+//send email successful 
+exports.sendPaymentSuccessEmail = async (req, res) => {
+    const { orderId, paymentId, amount } = req.body;
+  
+    const userId = req.user.id;
+  
+    if (!orderId || !paymentId || !amount || !userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Please provide all the fields" });
+    }
+  
+    try {
+      //student ko dhundo
+      const enrolledStudent = await User.findById(userId);
+      await mailSender(
+        enrolledStudent.email,
+        `Payment Recieved`,
+        paymentSuccessEmail(
+          `${enrolledStudent.firstName}`,
+          amount / 100,
+          orderId,
+          paymentId
+        )
+      );
+    } catch (error) {
+      console.log("error in sending mail", error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Could not send email" });
+    }
+  };

@@ -78,14 +78,31 @@ const User = require("../models/User");
         });
     }
  }
-
- //isAdmin 
+ 
+ exports.isInstructor = async(req,res,next)=>{
+    try{
+      if(req.user.accountType !== "Instructor"){
+        return res.status(400).json({
+          success:false,
+          message: "This is a protected route for Instructor",
+        });
+      }
+      next();
+    } catch(err){
+      console.log(err);
+      return res.status(500).json({
+        success:false,
+        message:"User role cannot be verified ,try again",
+      })
+    }
+  }
+  //isAdmin
  exports.isAdmin = async(req,res,next)=>{
     try{
         if(req.user.accountType!=="Admin"){
             return res.status(401).json({
                 success:false,
-                message:"User role cannot be verified",
+                message:"This is a protected route for Admin",
             });
         }
     }
