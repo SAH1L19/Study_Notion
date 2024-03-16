@@ -1,6 +1,9 @@
 const Profile = require("../models/Profile");
 const User= require("../models/User");
 const Course = require("../models/Course");
+
+
+
 exports.updateProfile = async(req,res)=>{
     try{
         const {dateOfBirth="",about='',contactNumber='',gender} = req.body;
@@ -199,8 +202,8 @@ exports.updateProfilePicture = async (req, res) => {
       const instructorId = req.user.id;
       const courseDetails = await Course.find({instructor:instructorId});
       const courseData = courseDetails.map((course) =>{
-        const totalStudentsEnrolled = course.studentEnrolled.length;
-        const totalAmountGenerated = totalStudentsEnrolled*(course.price);
+      const totalStudentsEnrolled = course.studentsEnrolled.length;
+      const totalAmountGenerated = totalStudentsEnrolled*(course.price);
 
         //create a new obj with additionalFields
         const courseDataWithStats = {

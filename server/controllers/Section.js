@@ -1,8 +1,6 @@
 const Section = require("../models/Section");
 const Course = require("../models/Course");
-
-
-
+const SubSection  =require("../models/SubSection")
 
 exports.createSection = async(req,res)=>{
     try{
@@ -110,6 +108,7 @@ exports.deleteSection = async(req,res)=>{
         return res.status(200).json({
             success:true,
             message:"Section Deleted Successfully",
+            data:course,
         });
     }
     catch(error){

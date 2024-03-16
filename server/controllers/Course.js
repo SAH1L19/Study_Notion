@@ -121,7 +121,7 @@ exports.deleteCourse = async (req, res) => {
     }
 
     // Unenroll students from the course
-    const studentsEnrolled = course.studentEnrolled
+    const studentsEnrolled = course.studentsEnrolled
     for (const studentId of studentsEnrolled) {
       await User.findByIdAndUpdate(studentId, {
         $pull: { courses: courseId },
@@ -230,7 +230,7 @@ exports.getCourseDetails = async (req, res) => {
         const timeDurationInSeconds = parseInt(subSection.timeDuration)
         totalDurationInSeconds += timeDurationInSeconds
       })
-    })
+    });
 
     const totalDuration = convertSecondsToDuration(totalDurationInSeconds)
     // return response

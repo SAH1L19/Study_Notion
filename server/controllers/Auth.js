@@ -56,7 +56,8 @@ exports.sendOTP = async (req, res) => {
       message: "OTP sent Successfully",
       otp,
     });
-  } catch (error) {
+  } 
+  catch (error){
     console.log(error);
     return res.send(500).json({
       success: false,
@@ -162,7 +163,8 @@ exports.signup = async (req, res) => {
       message: "User registered successfully",
       user,
     });
-  } catch (error) {
+  } 
+  catch (error) {
     console.log(error);
     console.log("User cannot be registered");
   }
@@ -180,7 +182,7 @@ exports.login = async (req, res) => {
           return res.json(403).json({
             succes:false,
             message:"All fields are required , please try again ",
-          })
+          });
         }
         //check user exist or not 
         const user = await User.findOne({email}.populate("additionalDetails"));

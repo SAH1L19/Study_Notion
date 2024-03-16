@@ -1,6 +1,7 @@
 const SubSection = require("../models/SubSection");
 const Section = require("../models/Section");
 const {uploadToCloudinary} = require("../utils/imageUploader");
+
 exports.SubSection = async(req,res)=>{
     try{
         const {sectionId,title,timeDuration,description} = req.body;
@@ -66,7 +67,7 @@ exports.updateSubSection = async (req, res) => {
       }
       if (req.files && req.files.video !== undefined) {
         const video = req.files.video
-        const uploadDetails = await uploadImageToCloudinary(
+        const uploadDetails = await uploadToCloudinary(
           video,
           process.env.FOLDER_NAME
         )

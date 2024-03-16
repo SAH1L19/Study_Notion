@@ -17,7 +17,7 @@ const OTPSchema = new mongoose.Schema({
         default:Date.now(),
         expires:5*60*1000,
     }
-})
+});
 
 
 // a function to send emails 
@@ -36,7 +36,7 @@ async function sendVerificationEmail(email,otp){
 OTPSchema.pre("save",async function(next){
     await sendVerificationEmail(this.email,this.otp);
     next();
-})
+});
 
 
 
