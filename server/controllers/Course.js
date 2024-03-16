@@ -12,8 +12,9 @@ const { convertSecondsToDuration } = require("../utils/convertSecondsToDuration"
 exports.createCourse = async (req, res) => {
   try {
     //fetch data
-    const { courseName, courseDescription, whatYouWillLearn, price,status, category ,tag,instructions} =
+    const { courseName, courseDescription, whatYouWillLearn, price, category ,tag,instructions} =
       req.body;
+    let status = req.body.status;
     // get thumbnail
     const thumbnail = req.files.thumbnailImage;
     // validation
