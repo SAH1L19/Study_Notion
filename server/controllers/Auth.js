@@ -29,8 +29,9 @@ exports.sendOTP = async (req, res) => {
 
     //generate OTP here
     var otp = otpGenerator.generate(6, {
-      upperCaseAlphabets: false,
-      specialChars: false,
+      UpperCaseAlphabets: false,
+      LowerCaseAlpahbets: false,
+      SpecialCase: false,
     });
     console.log("OTP generated", otp);
 
@@ -38,10 +39,10 @@ exports.sendOTP = async (req, res) => {
     let result = await OTP.findOne({ otp: otp });
 
     while (result) {
-      otp = otpGenerator(6, {
-        upperCaseAlphabets: false,
-        lowerCaseAlphabets: false,
-        specialChars: false,
+      otp = otpGenerator.generate(6, {
+        UpperCaseAlphabets: false,
+        LowerCaseAlpahbets: false,
+        SpecialCase: false,
       });
       result = await OTP.findOne({ otp: otp });
     }
@@ -51,7 +52,7 @@ exports.sendOTP = async (req, res) => {
     //pre middleware will be called hai  => node mailer 
     //create entry in DB
     const otpBody = await OTP.create(otpPayload);
-    res.send(200).json({
+    res.status(200).json({
       success: true,
       message: "OTP sent Successfully",
       otp,
@@ -59,7 +60,7 @@ exports.sendOTP = async (req, res) => {
   } 
   catch (error){
     console.log(error);
-    return res.send(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -78,6 +79,7 @@ exports.signup = async (req, res) => {
       confirmPassword,
       contactNumber,
       otp,
+      accountType,
     } = req.body;
 
     //validatation on that
@@ -97,14 +99,14 @@ exports.signup = async (req, res) => {
 
     //2 password match case
     if (password !== confirmPassword) {
-      return res.json(403).json({
+      return res.json(400).json({
         success: false,
         message:
           "Password and confirmPassword does not match.Please  try again ",
       });
     }
     //check user already exist or not
-    const existingUser = User.findOne({ email });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -122,13 +124,13 @@ exports.signup = async (req, res) => {
       .limit(1);
     console.log(recentOtp);
     //validate OTP
-    if (recentOtp.length == 0) {
+    if (recentOtp.length === 0) {
       //OTP not found
       return res.status(400).json({
         success: false,
         messgae: "OTP not found",
       });
-    } else if (otp !== recentOtp.otp) {
+    } else if (otp !== recentOtp[0].otp) {
       //Invalid OTP
       return res.status(400).json({
         success: false,
@@ -155,10 +157,10 @@ exports.signup = async (req, res) => {
       password: hashedpassword,
       accountType,
       additionalDetails: profileDetails._id,
-      image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName}${lastName}`,
+      image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
     });
     //return response
-    return res.json({
+    return res.status(200).json({
       success: true,
       message: "User registered successfully",
       user,
@@ -179,13 +181,14 @@ exports.login = async (req, res) => {
         //validation
         const {email,password}  = req.body;
         if(!email || !password){
-          return res.json(403).json({
+          return res.status(403).json({
             succes:false,
             message:"All fields are required , please try again ",
           });
         }
         //check user exist or not 
-        const user = await User.findOne({email}.populate("additionalDetails"));
+        const user = await User.findOne({ email }).populate("additionalDetails");
+
         if(!user){
           return res.status(401).json({
             success:false,
@@ -227,7 +230,7 @@ exports.login = async (req, res) => {
     }
     catch(error){
       console.log(error);
-        return res.json(500).json({
+        return res.status(500).json({
           success:false,
           message:"Login Failure , please try again later!",
         });

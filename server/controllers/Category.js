@@ -10,20 +10,21 @@ exports.createCategory = async(req,res)=>{
             });
         }
         //create entry in db
+        console.log('Before database operation');
         const CategoryDetails = await Category.create({
             name:name,description:description,
         });
-        console.log(CategoryDetails);
+        console.log('After database operation:', CategoryDetails);
         return res.status(200).json({
             success:true,
             message:"Category created successfully",
         });
     }
-    catch(error){
-    
+    catch(err){
+        console.error('Error:', err);
         return res.status(500).json({
             success:false,
-            message:error.message,
+            message:err.message,
         });
     }
 }

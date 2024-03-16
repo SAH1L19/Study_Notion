@@ -1,8 +1,11 @@
 const Profile = require("../models/Profile");
 const User= require("../models/User");
 const Course = require("../models/Course");
-
-
+const {uploadImageToCloudinary} = require("../utils/imageUploader");
+const { convertSecondsToDuration } = require("../utils/convertSecondsToDuration");
+const CourseProgress = require("../models/CourseProgress")
+const mongoose = require("mongoose")
+const RatingAndReview = require("../models/RatingAndReview")
 
 exports.updateProfile = async(req,res)=>{
     try{
@@ -33,9 +36,9 @@ exports.updateProfile = async(req,res)=>{
             
     }
     catch(error){
-        return res.json(500).json({
+        return res.status(500).json({
             success:false,
-            message:'Profile cannot be Updated ',
+            error:error.message,
         });
     }
 }
@@ -79,9 +82,17 @@ exports.deleteProfile = async(req,res)=>{
 
 exports.getAllUserDetails = async(req,res)=>{
     try{
-        const id = req.body.id;
+        const id = req.user.id;
 
-        const userDetails  = await User.findById(id).populate(additionalDetails).exec();
+        const userDetails  = await User.findById(id).populate("additionalDetails").exec();
+
+        if (!userDetails) {
+          return res.status(404).json({
+              success: false,
+              message: "User not found",
+          });
+      }
+
         return res.status(200).json({
             success:true,
             message:"User Details fetched successfully",
@@ -89,9 +100,9 @@ exports.getAllUserDetails = async(req,res)=>{
         });
     }
     catch(error){
-        return res.json(500).json({
+        return res.status(500).json({
             success:false,
-            message:'Profile cannot be Updated ',
+            message:'Something went wrong',
         });
     }
 }

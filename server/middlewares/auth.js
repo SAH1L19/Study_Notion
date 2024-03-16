@@ -100,11 +100,12 @@ const User = require("../models/User");
  exports.isAdmin = async(req,res,next)=>{
     try{
         if(req.user.accountType!=="Admin"){
-            return res.status(401).json({
+            return res.status(400).json({
                 success:false,
                 message:"This is a protected route for Admin",
             });
         }
+        next();
     }
     catch(error){
         return res.status(500).json({
