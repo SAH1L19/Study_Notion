@@ -1,1 +1,2 @@
 mongoose , nodemon , jsonwebtoken ,express, otp-generator , dotenv ,cookie-parser , nodemailer , bcrypt
+frontend : - typeanimation , routerdom 
